@@ -26,7 +26,7 @@ private val logger = KotlinLogging.logger {}
 fun loadRepository(repositoryDir: File): Repository {
     try {
         return FileRepositoryBuilder().apply {
-            gitDir = repositoryDir
+            workTree = repositoryDir
         }.build()
     } catch (e: IOException) {
         logger.error(e) { "Could not load repository at path ${repositoryDir.absolutePath}: $e" }

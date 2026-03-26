@@ -1,0 +1,8 @@
+# The file system path to the Git repository being analyzed.
+repositoryPath = ""
+
+# The tag name representing the old version in the Git repository.
+oldVersionTag = ""
+
+# The tag name representing the new version in the Git repository.
+newVersionTag = ""

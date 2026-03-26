@@ -17,6 +17,9 @@ dependencies {
     implementation(libs.jgit)
     implementation(libs.kotlin.logging)
 
+    implementation(libs.hoplite.core)
+    runtimeOnly(libs.hoplite.toml)
+
     runtimeOnly(libs.log4j.core)
     runtimeOnly(libs.log4j.slf4j2)
 }
