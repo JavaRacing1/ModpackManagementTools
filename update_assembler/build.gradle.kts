@@ -13,6 +13,12 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+
+    implementation(libs.jgit)
+    implementation(libs.kotlin.logging)
+
+    runtimeOnly(libs.log4j.core)
+    runtimeOnly(libs.log4j.slf4j2)
 }
 
 kotlin {
