@@ -1,5 +1,6 @@
 package de.javaracing.update_assembler
 
+import de.javaracing.update_assembler.exception.TagNotFoundException
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.eclipse.jgit.diff.DiffEntry
 import org.eclipse.jgit.diff.DiffFormatter
@@ -47,14 +48,14 @@ fun determineDiff(repository: Repository, oldVersion: String, newVersion: String
     val oldVersionRef = tags.find { tag -> tag.name == oldVersion }
     if (oldVersionRef == null) {
         logger.error { "Could not find old version ref $oldVersion" }
-        return emptyList()
+        throw TagNotFoundException("Could not find old version ref $oldVersion")
     }
     val oldVersionTreeId = getTreeIdForTag(repository, oldVersionRef)
 
     val newVersionRef = tags.find { tag -> tag.name == newVersion }
     if (newVersionRef == null) {
         logger.error { "Could not find new version ref $newVersion" }
-        return emptyList()
+        throw TagNotFoundException("Could not find new version ref $oldVersion")
     }
     val newVersionTreeId = getTreeIdForTag(repository, newVersionRef)
 

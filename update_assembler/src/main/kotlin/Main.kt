@@ -1,10 +1,13 @@
 package de.javaracing.update_assembler
 
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffEntry
 import org.eclipse.jgit.lib.Repository
+import org.zeroturnaround.zip.ZipUtil
 import java.io.File
 import java.io.IOException
+import kotlin.io.path.*
 
 private val logger = KotlinLogging.logger {}
 
@@ -25,7 +28,13 @@ fun main(args: Array<String>) {
     }
 
     logger.info { "Calculating diff between old version (${config.oldVersionTag}) and new version (${config.newVersionTag})" }
-    val diffEntries: List<DiffEntry> = determineDiff(repository, config.oldVersionTagRef, config.newVersionTagRef)
+    var diffEntries: List<DiffEntry>
+    try {
+        diffEntries = determineDiff(repository, config.oldVersionTagRef, config.newVersionTagRef)
+    } catch (e: Exception) {
+        logger.error(e) { "Could not calculate diff between old version (${config.oldVersionTag}) and new version (${config.newVersionTag})" }
+        return
+    }
     val changedFilePaths: Set<String> = getChangedFilePaths(diffEntries)
     val deletedFilePaths: Set<String> = getDeletedFilePaths(diffEntries)
 
@@ -37,4 +46,32 @@ fun main(args: Array<String>) {
     deletedFilePaths.forEach {
         logger.info { "- $it" }
     }
+
+    val tempDirPath = createTempDirectory("modpack_update_assembler")
+    logger.info { "Copying changed files to temp directory $tempDirPath" }
+    changedFilePaths.forEach { filePath ->
+        val repositoryFile = File(repositoryPath, filePath)
+        val newFile = File(tempDirPath.toFile(), "update/$filePath")
+        repositoryFile.copyTo(newFile, overwrite = true)
+    }
+
+    val outputDir = config.outputDir
+    val outputDirPath = Path(outputDir)
+    if (!outputDirPath.exists()) {
+        logger.info { "Creating output directory $outputDir" }
+        outputDirPath.createDirectories()
+    } else if (!outputDirPath.isDirectory()) {
+        logger.error { "Output directory $outputDir is not a directory" }
+        return
+    }
+
+    val updateZipPath = outputDirPath.resolve("update_${config.newVersionTag}.zip")
+    if (updateZipPath.exists()) {
+        logger.info { "Deleting existing update file $updateZipPath" }
+        updateZipPath.toFile().delete()
+    }
+    logger.info { "Packing update to $updateZipPath" }
+    ZipUtil.pack(tempDirPath.resolve("update").toFile(), updateZipPath.toFile())
+
+    repository.close()
 }

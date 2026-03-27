@@ -16,6 +16,7 @@ dependencies {
 
     implementation(libs.jgit)
     implementation(libs.kotlin.logging)
+    implementation(libs.zt.zip)
 
     implementation(libs.hoplite.core)
     runtimeOnly(libs.hoplite.toml)

@@ -6,3 +6,6 @@ oldVersionTag = ""
 
 # The tag name representing the new version in the Git repository.
 newVersionTag = ""
+
+# The directory where the update files will be placed.
+outputDir = ""
