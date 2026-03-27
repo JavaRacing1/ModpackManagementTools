@@ -14,8 +14,10 @@ private val logger = KotlinLogging.logger {}
  * @property oldVersionTag The tag name representing the old version in the Git repository.
  * @property newVersionTag The tag name representing the new version in the Git repository.
  * @property outputDir The directory where the update files will be placed.
+ * @property checkoutNewVersion Whether to check out the new version of the repository.
  */
-data class Config(val repositoryPath: String, val oldVersionTag: String, val newVersionTag: String, val outputDir: String) {
+data class Config(val repositoryPath: String, val oldVersionTag: String, val newVersionTag: String, val outputDir: String,
+                  val checkoutNewVersion: Boolean) {
     val oldVersionTagRef: String
         get() = "refs/tags/$oldVersionTag"
 

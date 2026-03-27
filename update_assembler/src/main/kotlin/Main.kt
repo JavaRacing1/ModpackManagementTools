@@ -47,6 +47,15 @@ fun main(args: Array<String>) {
         logger.info { "- $it" }
     }
 
+    val git = Git(repository)
+    if (config.checkoutNewVersion) {
+        logger.info { "Checking out new version (${config.newVersionTag})" }
+        git.checkout()
+            .setName(config.newVersionTagRef)
+            .setForced(true)
+            .call()
+    }
+
     val tempDirPath = createTempDirectory("modpack_update_assembler")
     logger.info { "Copying changed files to temp directory $tempDirPath" }
     changedFilePaths.forEach { filePath ->

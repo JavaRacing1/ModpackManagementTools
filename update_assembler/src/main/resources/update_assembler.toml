@@ -9,3 +9,6 @@ newVersionTag = ""
 
 # The directory where the update files will be placed.
 outputDir = ""
+
+# Whether to check out the new version of the repository.
+checkoutNewVersion = true
