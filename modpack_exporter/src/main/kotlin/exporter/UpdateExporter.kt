@@ -62,6 +62,7 @@ class UpdateExporter : ModpackExporter {
         }
 
         writeDeleteFilesBatchScript(deletedFilePaths, tempDirPath)
+        writeDeleteFilesShellScript(deletedFilePaths, tempDirPath)
     }
 
     private fun writeDeleteFilesBatchScript(deletedFilePaths: Set<String>, tempDirPath: Path) {
@@ -77,6 +78,20 @@ class UpdateExporter : ModpackExporter {
 
         val batchFilePath = tempDirPath.resolve("delete_outdated_files.bat")
         batchFilePath.writeLines(fileLines)
+    }
+
+    private fun writeDeleteFilesShellScript(deletedFilePaths: Set<String>, tempDirPath: Path) {
+        logger.info { "Writing shell script for deleting outdated files" }
+        val fileLines = mutableListOf<String>()
+        fileLines.add("#!/bin/sh")
+        fileLines.add("echo Deleting files...")
+        deletedFilePaths.forEach { filePath ->
+            fileLines.add("rm -f \"$filePath\"")
+        }
+        fileLines.add("echo All outdated files deleted.")
+
+        val shellFilePath = tempDirPath.resolve("delete_outdated_files.sh")
+        shellFilePath.writeLines(fileLines)
     }
 
     override fun export(modpackName: String, config: Config) {
