@@ -1,6 +1,7 @@
 package de.javaracing.modpack_exporter.exporter
 
 import de.javaracing.modpack_exporter.Config
+import de.javaracing.modpack_exporter.exception.TagNotFoundException
 import de.javaracing.modpack_exporter.util.calculateHashAndSave
 import de.javaracing.modpack_exporter.util.determineDiff
 import de.javaracing.modpack_exporter.util.getChangedFilePaths
@@ -10,6 +11,7 @@ import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffEntry
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
+import java.io.IOException
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.exists
@@ -33,12 +35,19 @@ class UpdateExporter : ModpackExporter {
         tempDirPath?.resolve(getName()) ?: throw IllegalStateException("Temp directory not set")
 
     override fun prepareFiles(git: Git, config: Config) {
-        logger.info { "Calculating diff between updated version (${config.versionTag}) and previous version (${config.previousVersionTag})" }
+        val versionTag = config.versionTag
+        val previousVersionTag = config.previousVersionTag
+        logger.info { "Calculating diff between updated version (${versionTag}) and previous version (${previousVersionTag})" }
         var diffEntries: List<DiffEntry>
         try {
             diffEntries = determineDiff(git.repository, config.versionTagRef, config.previousVersionTagRef)
-        } catch (e: Exception) {
-            logger.error(e) { "Could not calculate diff between updated version (${config.versionTag}) and previous version (${config.previousVersionTag})" }
+        } catch (e: IOException) {
+            logger.error(e) {
+                "Could not calculate diff between updated version (${versionTag}) and previous version (${previousVersionTag})"
+            }
+            return
+        } catch (e: TagNotFoundException) {
+            logger.error(e) { "Could not find tag (${e.tagName})" }
             return
         }
         val changedFilePaths: Set<String> = getChangedFilePaths(diffEntries)
@@ -94,7 +103,7 @@ class UpdateExporter : ModpackExporter {
         val shellFilePath = tempDirPath.resolve("delete_outdated_files.sh")
         shellFilePath.writeLines(fileLines)
     }
-    
+
     private fun writeOutdatedFiles(outdatedFilePaths: Set<String>, tempDirPath: Path) {
         logger.info { "Writing file with outdated files" }
         val fileLines = mutableListOf<String>()

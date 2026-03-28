@@ -5,6 +5,8 @@ import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.pathString
 
+private const val FILE_BUFFER_SIZE = 8192
+
 /**
  * Computes the cryptographic hash of the file at the given path using the specified algorithm.
  *
@@ -15,7 +17,7 @@ import kotlin.io.path.pathString
 fun calculateHash(path: Path, algorithm: String = "SHA-256"): String {
     val digest = MessageDigest.getInstance(algorithm)
     path.toFile().inputStream().use { inputStream ->
-        val buffer = ByteArray(8192)
+        val buffer = ByteArray(FILE_BUFFER_SIZE)
         var bytesRead: Int
         while (inputStream.read(buffer).also { bytesRead = it } != -1) {
             digest.update(buffer, 0, bytesRead)

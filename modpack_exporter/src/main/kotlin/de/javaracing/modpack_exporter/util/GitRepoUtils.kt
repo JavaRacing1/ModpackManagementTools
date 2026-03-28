@@ -52,7 +52,7 @@ fun determineDiff(repository: Repository, version: String, previousVersion: Stri
     if (versionRef == null || previousVersionRef == null) {
         val invalidVersion = if (versionRef == null) version else previousVersion
         logger.error { "Could not find version ref $invalidVersion" }
-        throw TagNotFoundException("Could not find version ref $invalidVersion")
+        throw TagNotFoundException(invalidVersion, "Could not find version ref $invalidVersion")
     }
     val versionTreeId = getTreeIdForTag(repository, versionRef)
     val previousVersionTreeId = getTreeIdForTag(repository, previousVersionRef)
@@ -88,13 +88,16 @@ fun getChangedFilePaths(diffEntries: List<DiffEntry>): Set<String> = diffEntries
     .toSet()
 
 /**
- * Extracts a set of file paths that correspond to deleted or renamed files based on the provided list of Git diff entries.
+ * Extracts a set of file paths that correspond to deleted or renamed
+ * files based on the provided list of Git diff entries.
  *
  * @param diffEntries The list of Git diff entries to process.
  * @return A set of file paths representing files that were deleted or renamed.
  */
 fun getOutdatedFilePaths(diffEntries: List<DiffEntry>): Set<String> = diffEntries
-    .filter { entry -> entry.changeType == DiffEntry.ChangeType.DELETE || entry.changeType == DiffEntry.ChangeType.RENAME }
+    .filter { entry ->
+        entry.changeType == DiffEntry.ChangeType.DELETE || entry.changeType == DiffEntry.ChangeType.RENAME
+    }
     .map { diffEntry -> diffEntry.oldPath }
     .toSet()
 

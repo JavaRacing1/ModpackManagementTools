@@ -3,3 +3,14 @@ naming:
     active: true
     aliases: [ 'PackageName' ]
     packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9_]*)*'
+
+style:
+  ForbiddenComment:
+    active: true
+    comments:
+      - reason: 'Forbidden FIXME todo marker in comment, please fix the problem.'
+        value: 'FIXME:'
+      - reason: 'Forbidden STOPSHIP todo marker in comment, please address the problem before shipping the code.'
+        value: 'STOPSHIP:'
+  MaxLineLength:
+    maxLineLength: 130
