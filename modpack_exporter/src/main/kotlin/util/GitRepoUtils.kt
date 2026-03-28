@@ -93,7 +93,7 @@ fun getChangedFilePaths(diffEntries: List<DiffEntry>): Set<String> = diffEntries
  * @param diffEntries The list of Git diff entries to process.
  * @return A set of file paths representing files that were deleted or renamed.
  */
-fun getDeletedFilePaths(diffEntries: List<DiffEntry>): Set<String> = diffEntries
+fun getOutdatedFilePaths(diffEntries: List<DiffEntry>): Set<String> = diffEntries
     .filter { entry -> entry.changeType == DiffEntry.ChangeType.DELETE || entry.changeType == DiffEntry.ChangeType.RENAME }
     .map { diffEntry -> diffEntry.oldPath }
     .toSet()

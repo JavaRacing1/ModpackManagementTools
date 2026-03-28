@@ -4,7 +4,7 @@ import de.javaracing.modpack_exporter.Config
 import de.javaracing.modpack_exporter.util.calculateHashAndSave
 import de.javaracing.modpack_exporter.util.determineDiff
 import de.javaracing.modpack_exporter.util.getChangedFilePaths
-import de.javaracing.modpack_exporter.util.getDeletedFilePaths
+import de.javaracing.modpack_exporter.util.getOutdatedFilePaths
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffEntry
@@ -42,14 +42,14 @@ class UpdateExporter : ModpackExporter {
             return
         }
         val changedFilePaths: Set<String> = getChangedFilePaths(diffEntries)
-        val deletedFilePaths: Set<String> = getDeletedFilePaths(diffEntries)
+        val outdatedFilePaths: Set<String> = getOutdatedFilePaths(diffEntries)
 
         logger.info { "Changed files:" }
         changedFilePaths.forEach {
             logger.info { "+ $it" }
         }
-        logger.info { "Deleted files:" }
-        deletedFilePaths.forEach {
+        logger.info { "Outdated files:" }
+        outdatedFilePaths.forEach {
             logger.info { "- $it" }
         }
 
@@ -61,16 +61,17 @@ class UpdateExporter : ModpackExporter {
             repositoryFile.copyTo(newFile, overwrite = true)
         }
 
-        writeDeleteFilesBatchScript(deletedFilePaths, tempDirPath)
-        writeDeleteFilesShellScript(deletedFilePaths, tempDirPath)
+        writeDeleteOutdatedFilesBatchScript(outdatedFilePaths, tempDirPath)
+        writeDeleteOutdatedFilesShellScript(outdatedFilePaths, tempDirPath)
+        writeOutdatedFiles(outdatedFilePaths, tempDirPath)
     }
 
-    private fun writeDeleteFilesBatchScript(deletedFilePaths: Set<String>, tempDirPath: Path) {
+    private fun writeDeleteOutdatedFilesBatchScript(outdatedFilePaths: Set<String>, tempDirPath: Path) {
         logger.info { "Writing batch script for deleting outdated files" }
         val fileLines = mutableListOf<String>()
         fileLines.add("@echo off")
         fileLines.add("echo Deleting files...")
-        deletedFilePaths.forEach { filePath ->
+        outdatedFilePaths.forEach { filePath ->
             fileLines.add("del /f /q \".\\${filePath.replace('/', '\\')}\"")
         }
         fileLines.add("echo All outdated files deleted.")
@@ -80,18 +81,28 @@ class UpdateExporter : ModpackExporter {
         batchFilePath.writeLines(fileLines)
     }
 
-    private fun writeDeleteFilesShellScript(deletedFilePaths: Set<String>, tempDirPath: Path) {
+    private fun writeDeleteOutdatedFilesShellScript(outdatedFilePaths: Set<String>, tempDirPath: Path) {
         logger.info { "Writing shell script for deleting outdated files" }
         val fileLines = mutableListOf<String>()
         fileLines.add("#!/bin/sh")
         fileLines.add("echo Deleting files...")
-        deletedFilePaths.forEach { filePath ->
+        outdatedFilePaths.forEach { filePath ->
             fileLines.add("rm -f \"$filePath\"")
         }
         fileLines.add("echo All outdated files deleted.")
 
         val shellFilePath = tempDirPath.resolve("delete_outdated_files.sh")
         shellFilePath.writeLines(fileLines)
+    }
+    
+    private fun writeOutdatedFiles(outdatedFilePaths: Set<String>, tempDirPath: Path) {
+        logger.info { "Writing file with outdated files" }
+        val fileLines = mutableListOf<String>()
+        outdatedFilePaths.forEach { filePath ->
+            fileLines.add(filePath)
+        }
+        val outdatedFilesFilePath = tempDirPath.resolve("outdated_files.txt")
+        outdatedFilesFilePath.writeLines(fileLines)
     }
 
     override fun export(modpackName: String, config: Config) {
