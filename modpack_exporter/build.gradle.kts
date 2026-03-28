@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     alias(libs.plugins.shadow)
+    alias(libs.plugins.detekt)
 
     application
 }
@@ -36,4 +37,9 @@ application {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+detekt {
+    config.setFrom(file("$rootDir/config/detekt.yml"))
+    buildUponDefaultConfig = true
 }

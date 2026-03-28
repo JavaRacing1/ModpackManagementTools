@@ -1,0 +1,5 @@
+naming:
+  PackageNaming:
+    active: true
+    aliases: [ 'PackageName' ]
+    packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9_]*)*'
