@@ -1,6 +1,7 @@
 package de.javaracing.modpack_exporter.exporter
 
 import de.javaracing.modpack_exporter.Config
+import de.javaracing.modpack_exporter.util.calculateHashAndSave
 import de.javaracing.modpack_exporter.util.determineDiff
 import de.javaracing.modpack_exporter.util.getChangedFilePaths
 import de.javaracing.modpack_exporter.util.getDeletedFilePaths
@@ -69,5 +70,7 @@ class UpdateExporter : ModpackExporter {
         }
         logger.info { "Packing update to $updateZipPath" }
         ZipUtil.pack(getSubTempDirectory().toFile(), updateZipPath.toFile())
+        val hash = calculateHashAndSave(updateZipPath)
+        logger.info { "SHA-256 Hash of zip: $hash" }
     }
 }
