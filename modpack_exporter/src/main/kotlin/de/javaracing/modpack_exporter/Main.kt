@@ -42,7 +42,7 @@ fun main(args: Array<String>) {
     }
 
     logger.info { "Preparing files for export" }
-    val tempDirPath = createTempDirectory("modpack_exporter")
+    val tempDirPath = createTempDirectory("de/javaracing/modpack_exporter")
     exporters.forEach { exporter ->
         exporter.setTempDirectory(tempDirPath)
         exporter.getSubTempDirectory().createDirectories()
