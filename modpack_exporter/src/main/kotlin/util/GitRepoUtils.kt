@@ -40,35 +40,32 @@ fun loadRepository(repositoryDir: File): Repository {
  * Determines the diff between two Git tags in a repository.
  *
  * @param repository The Git repository instance.
- * @param oldVersion The old version tag name.
- * @param newVersion The new version tag name.
+ * @param version The updated version tag name.
+ * @param previousVersion The previous version tag name.
  * @return A list of DiffEntry objects representing the changes between the two versions.
  */
-fun determineDiff(repository: Repository, oldVersion: String, newVersion: String): List<DiffEntry> {
+fun determineDiff(repository: Repository, version: String, previousVersion: String): List<DiffEntry> {
     val tags = repository.refDatabase.getRefsByPrefix(Constants.R_TAGS)
-    val oldVersionRef = tags.find { tag -> tag.name == oldVersion }
-    if (oldVersionRef == null) {
-        logger.error { "Could not find old version ref $oldVersion" }
-        throw TagNotFoundException("Could not find old version ref $oldVersion")
-    }
-    val oldVersionTreeId = getTreeIdForTag(repository, oldVersionRef)
 
-    val newVersionRef = tags.find { tag -> tag.name == newVersion }
-    if (newVersionRef == null) {
-        logger.error { "Could not find new version ref $newVersion" }
-        throw TagNotFoundException("Could not find new version ref $oldVersion")
+    val versionRef = tags.find { tag -> tag.name == version }
+    val previousVersionRef = tags.find { tag -> tag.name == previousVersion }
+    if (versionRef == null || previousVersionRef == null) {
+        val invalidVersion = if (versionRef == null) version else previousVersion
+        logger.error { "Could not find version ref $invalidVersion" }
+        throw TagNotFoundException("Could not find version ref $invalidVersion")
     }
-    val newVersionTreeId = getTreeIdForTag(repository, newVersionRef)
+    val versionTreeId = getTreeIdForTag(repository, versionRef)
+    val previousVersionTreeId = getTreeIdForTag(repository, previousVersionRef)
 
     val reader = repository.newObjectReader()
-    val oldTreeIter = CanonicalTreeParser()
-    oldTreeIter.reset(reader, oldVersionTreeId)
-    val newTreeIter = CanonicalTreeParser()
-    newTreeIter.reset(reader, newVersionTreeId)
+    val versionTreeIter = CanonicalTreeParser()
+    versionTreeIter.reset(reader, versionTreeId)
+    val previousVersionTreeIter = CanonicalTreeParser()
+    previousVersionTreeIter.reset(reader, previousVersionTreeId)
 
     val diffFormatter = DiffFormatter(ByteArrayOutputStream())
     diffFormatter.setRepository(repository)
-    return diffFormatter.scan(oldTreeIter, newTreeIter)
+    return diffFormatter.scan(previousVersionTreeIter, versionTreeIter)
 }
 
 private fun getTreeIdForTag(repository: Repository, tag: Ref): ObjectId {

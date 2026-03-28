@@ -1,14 +1,14 @@
 # The file system path to the Git repository being analyzed.
 repositoryPath = ""
 
-# The tag name representing the old version in the Git repository.
-oldVersionTag = ""
+# The tag name representing the updated version in the Git repository.
+versionTag = ""
 
-# The tag name representing the new version in the Git repository.
-newVersionTag = ""
+# The tag name representing the previous version in the Git repository.
+previousVersionTag = ""
 
 # The directory where the update files will be placed.
 outputDir = ""
 
-# Whether to check out the new version of the repository.
-checkoutNewVersion = true
+# Whether to check out the updated version of the repository.
+checkoutVersion = true

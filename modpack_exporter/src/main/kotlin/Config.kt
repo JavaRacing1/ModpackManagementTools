@@ -11,18 +11,20 @@ private val logger = KotlinLogging.logger {}
  * Represents the configuration for the modpack exporter.
  *
  * @property repositoryPath The file system path to the Git repository being analyzed.
- * @property oldVersionTag The tag name representing the old version in the Git repository.
- * @property newVersionTag The tag name representing the new version in the Git repository.
+ * @property versionTag The tag name representing the updated version in the Git repository.
+ * @property previousVersionTag The tag name representing the previous version in the Git repository.
  * @property outputDir The directory where the update files will be placed.
- * @property checkoutNewVersion Whether to check out the new version of the repository.
+ * @property checkoutVersion Whether to check out the updated version of the repository.
  */
-data class Config(val repositoryPath: String, val oldVersionTag: String, val newVersionTag: String, val outputDir: String,
-                  val checkoutNewVersion: Boolean) {
-    val oldVersionTagRef: String
-        get() = "refs/tags/$oldVersionTag"
+data class Config(
+    val repositoryPath: String, val versionTag: String, val previousVersionTag: String, val outputDir: String,
+    val checkoutVersion: Boolean
+) {
+    val versionTagRef: String
+        get() = "refs/tags/$versionTag"
 
-    val newVersionTagRef: String
-        get() = "refs/tags/$newVersionTag"
+    val previousVersionTagRef: String
+        get() = "refs/tags/$previousVersionTag"
 
     companion object {
         /**

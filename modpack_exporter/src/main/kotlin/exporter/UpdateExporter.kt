@@ -31,12 +31,12 @@ class UpdateExporter : ModpackExporter {
         tempDirPath?.resolve(getName()) ?: throw IllegalStateException("Temp directory not set")
 
     override fun prepareFiles(git: Git, config: Config) {
-        logger.info { "Calculating diff between old version (${config.oldVersionTag}) and new version (${config.newVersionTag})" }
+        logger.info { "Calculating diff between updated version (${config.versionTag}) and previous version (${config.previousVersionTag})" }
         var diffEntries: List<DiffEntry>
         try {
-            diffEntries = determineDiff(git.repository, config.oldVersionTagRef, config.newVersionTagRef)
+            diffEntries = determineDiff(git.repository, config.versionTagRef, config.previousVersionTagRef)
         } catch (e: Exception) {
-            logger.error(e) { "Could not calculate diff between old version (${config.oldVersionTag}) and new version (${config.newVersionTag})" }
+            logger.error(e) { "Could not calculate diff between updated version (${config.versionTag}) and previous version (${config.previousVersionTag})" }
             return
         }
         val changedFilePaths: Set<String> = getChangedFilePaths(diffEntries)
@@ -58,10 +58,11 @@ class UpdateExporter : ModpackExporter {
             val newFile = File(tempDirPath.toFile(), filePath)
             repositoryFile.copyTo(newFile, overwrite = true)
         }
+        //TODO: Create delete files scripts
     }
 
     override fun export(modpackName: String, config: Config) {
-        val updateZipPath = Path(config.outputDir).resolve("${modpackName}_${config.newVersionTag}_Update.zip")
+        val updateZipPath = Path(config.outputDir).resolve("${modpackName}_${config.versionTag}_Update.zip")
         if (updateZipPath.exists()) {
             logger.info { "Deleting existing update file $updateZipPath" }
             updateZipPath.toFile().delete()

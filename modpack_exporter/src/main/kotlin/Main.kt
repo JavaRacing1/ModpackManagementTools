@@ -13,12 +13,17 @@ import kotlin.io.path.*
 private val logger = KotlinLogging.logger {}
 
 fun main(args: Array<String>) {
+    //TODO: Allow config with named args
     val configRessource: String = if (args.isNotEmpty()) args[0] else "/modpack_exporter.toml"
     logger.info { "Loading config at resource $configRessource" }
     val config = Config.load(configRessource)
 
+    //TODO: Load exporters from config
+    //TODO: Add curseforge exporter
+    //TODO: Add technic launcher exporter
     val exporters: List<ModpackExporter> = listOf(UpdateExporter())
 
+    //TODO: Support remote repositories
     val repositoryPath = Path(config.repositoryPath)
     logger.info { "Loading Git repository at $repositoryPath" }
     var repository: Repository?
@@ -30,9 +35,10 @@ fun main(args: Array<String>) {
     }
     val git = Git(repository)
 
-    if (config.checkoutNewVersion) {
-        logger.info { "Checking out new version (${config.newVersionTag})" }
-        checkout(git, config.newVersionTagRef)
+    //TODO: Provide more settings for checkout
+    if (config.checkoutVersion) {
+        logger.info { "Checking out updated version (${config.versionTag})" }
+        checkout(git, config.versionTagRef)
     }
 
     logger.info { "Preparing files for export" }
