@@ -1,7 +1,8 @@
-package de.javaracing.update_assembler
+package de.javaracing.update_assembler.util
 
 import de.javaracing.update_assembler.exception.TagNotFoundException
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffEntry
 import org.eclipse.jgit.diff.DiffFormatter
 import org.eclipse.jgit.lib.Constants
@@ -99,3 +100,16 @@ fun getDeletedFilePaths(diffEntries: List<DiffEntry>): Set<String> = diffEntries
     .filter { entry -> entry.changeType == DiffEntry.ChangeType.DELETE || entry.changeType == DiffEntry.ChangeType.RENAME }
     .map { diffEntry -> diffEntry.oldPath }
     .toSet()
+
+/**
+ * Checks out a specific reference in the given Git repository and forces the checkout operation.
+ *
+ * @param git The Git instance representing the repository to perform the checkout on.
+ * @param ref The name of the reference to check out (e.g., a branch or a tag).
+ */
+fun checkout(git: Git, ref: String) {
+    git.checkout()
+        .setName(ref)
+        .setForced(true)
+        .call()
+}

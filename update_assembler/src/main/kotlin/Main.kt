@@ -1,11 +1,12 @@
 package de.javaracing.update_assembler
 
+import de.javaracing.update_assembler.exporter.ModpackExporter
+import de.javaracing.update_assembler.exporter.UpdateExporter
+import de.javaracing.update_assembler.util.checkout
+import de.javaracing.update_assembler.util.loadRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.eclipse.jgit.api.Git
-import org.eclipse.jgit.diff.DiffEntry
 import org.eclipse.jgit.lib.Repository
-import org.zeroturnaround.zip.ZipUtil
-import java.io.File
 import java.io.IOException
 import kotlin.io.path.*
 
@@ -16,53 +17,32 @@ fun main(args: Array<String>) {
     logger.info { "Loading config at resource $configRessource" }
     val config = Config.load(configRessource)
 
-    val repositoryPath = config.repositoryPath
+    val exporters: List<ModpackExporter> = listOf(UpdateExporter())
+
+    val repositoryPath = Path(config.repositoryPath)
     logger.info { "Loading Git repository at $repositoryPath" }
-    val repositoryFile = File(repositoryPath)
     var repository: Repository?
     try {
-        repository = loadRepository(repositoryFile)
+        repository = loadRepository(repositoryPath.toFile())
     } catch (e: IOException) {
         logger.error(e) { "Could not load Git repository at $repositoryPath" }
         return
     }
-
-    logger.info { "Calculating diff between old version (${config.oldVersionTag}) and new version (${config.newVersionTag})" }
-    var diffEntries: List<DiffEntry>
-    try {
-        diffEntries = determineDiff(repository, config.oldVersionTagRef, config.newVersionTagRef)
-    } catch (e: Exception) {
-        logger.error(e) { "Could not calculate diff between old version (${config.oldVersionTag}) and new version (${config.newVersionTag})" }
-        return
-    }
-    val changedFilePaths: Set<String> = getChangedFilePaths(diffEntries)
-    val deletedFilePaths: Set<String> = getDeletedFilePaths(diffEntries)
-
-    logger.info { "Changed files:" }
-    changedFilePaths.forEach {
-        logger.info { "+ $it" }
-    }
-    logger.info { "Deleted files:" }
-    deletedFilePaths.forEach {
-        logger.info { "- $it" }
-    }
-
     val git = Git(repository)
+
     if (config.checkoutNewVersion) {
         logger.info { "Checking out new version (${config.newVersionTag})" }
-        git.checkout()
-            .setName(config.newVersionTagRef)
-            .setForced(true)
-            .call()
+        checkout(git, config.newVersionTagRef)
     }
 
+    logger.info { "Preparing files for export" }
     val tempDirPath = createTempDirectory("modpack_update_assembler")
-    logger.info { "Copying changed files to temp directory $tempDirPath" }
-    changedFilePaths.forEach { filePath ->
-        val repositoryFile = File(repositoryPath, filePath)
-        val newFile = File(tempDirPath.toFile(), "update/$filePath")
-        repositoryFile.copyTo(newFile, overwrite = true)
+    exporters.forEach { exporter ->
+        exporter.setTempDirectory(tempDirPath)
+        exporter.getSubTempDirectory().createDirectories()
+        exporter.prepareFiles(git, config)
     }
+    logger.info { "Files prepared for export" }
 
     val outputDir = config.outputDir
     val outputDirPath = Path(outputDir)
@@ -74,13 +54,11 @@ fun main(args: Array<String>) {
         return
     }
 
-    val updateZipPath = outputDirPath.resolve("update_${config.newVersionTag}.zip")
-    if (updateZipPath.exists()) {
-        logger.info { "Deleting existing update file $updateZipPath" }
-        updateZipPath.toFile().delete()
+    logger.info { "Exporting modpack to $outputDir" }
+    exporters.forEach { exporter ->
+        exporter.export(repositoryPath.name, config)
     }
-    logger.info { "Packing update to $updateZipPath" }
-    ZipUtil.pack(tempDirPath.resolve("update").toFile(), updateZipPath.toFile())
+    logger.info { "Modpack export complete" }
 
     repository.close()
 }
