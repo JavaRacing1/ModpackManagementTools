@@ -13,6 +13,7 @@ import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.exists
+import kotlin.io.path.writeLines
 
 /**
  * Implementation of the ModpackExporter interface for generating updates by calculating
@@ -59,7 +60,23 @@ class UpdateExporter : ModpackExporter {
             val newFile = File(tempDirPath.toFile(), filePath)
             repositoryFile.copyTo(newFile, overwrite = true)
         }
-        //TODO: Create delete files scripts
+
+        writeDeleteFilesBatchScript(deletedFilePaths, tempDirPath)
+    }
+
+    private fun writeDeleteFilesBatchScript(deletedFilePaths: Set<String>, tempDirPath: Path) {
+        logger.info { "Writing batch script for deleting outdated files" }
+        val fileLines = mutableListOf<String>()
+        fileLines.add("@echo off")
+        fileLines.add("echo Deleting files...")
+        deletedFilePaths.forEach { filePath ->
+            fileLines.add("del /f /q \".\\${filePath.replace('/', '\\')}\"")
+        }
+        fileLines.add("echo All outdated files deleted.")
+        fileLines.add("pause")
+
+        val batchFilePath = tempDirPath.resolve("delete_outdated_files.bat")
+        batchFilePath.writeLines(fileLines)
     }
 
     override fun export(modpackName: String, config: Config) {
