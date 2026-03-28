@@ -1,4 +1,4 @@
-package de.javaracing.update_assembler.exception
+package de.javaracing.modpack_exporter.exception
 
 import java.io.Serial
 

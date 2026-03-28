@@ -1,9 +1,9 @@
-package de.javaracing.update_assembler.exporter
+package de.javaracing.modpack_exporter.exporter
 
-import de.javaracing.update_assembler.Config
-import de.javaracing.update_assembler.util.determineDiff
-import de.javaracing.update_assembler.util.getChangedFilePaths
-import de.javaracing.update_assembler.util.getDeletedFilePaths
+import de.javaracing.modpack_exporter.Config
+import de.javaracing.modpack_exporter.util.determineDiff
+import de.javaracing.modpack_exporter.util.getChangedFilePaths
+import de.javaracing.modpack_exporter.util.getDeletedFilePaths
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffEntry

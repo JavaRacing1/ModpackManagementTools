@@ -1,6 +1,6 @@
-package de.javaracing.update_assembler.util
+package de.javaracing.modpack_exporter.util
 
-import de.javaracing.update_assembler.exception.TagNotFoundException
+import de.javaracing.modpack_exporter.exception.TagNotFoundException
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffEntry

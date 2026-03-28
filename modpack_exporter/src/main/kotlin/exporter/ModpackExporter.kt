@@ -1,6 +1,6 @@
-package de.javaracing.update_assembler.exporter
+package de.javaracing.modpack_exporter.exporter
 
-import de.javaracing.update_assembler.Config
+import de.javaracing.modpack_exporter.Config
 import org.eclipse.jgit.api.Git
 import java.nio.file.Path
 

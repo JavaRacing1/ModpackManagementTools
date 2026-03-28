@@ -1,9 +1,9 @@
-package de.javaracing.update_assembler
+package de.javaracing.modpack_exporter
 
-import de.javaracing.update_assembler.exporter.ModpackExporter
-import de.javaracing.update_assembler.exporter.UpdateExporter
-import de.javaracing.update_assembler.util.checkout
-import de.javaracing.update_assembler.util.loadRepository
+import de.javaracing.modpack_exporter.exporter.ModpackExporter
+import de.javaracing.modpack_exporter.exporter.UpdateExporter
+import de.javaracing.modpack_exporter.util.checkout
+import de.javaracing.modpack_exporter.util.loadRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.Repository
@@ -13,7 +13,7 @@ import kotlin.io.path.*
 private val logger = KotlinLogging.logger {}
 
 fun main(args: Array<String>) {
-    val configRessource: String = if (args.isNotEmpty()) args[0] else "/update_assembler.toml"
+    val configRessource: String = if (args.isNotEmpty()) args[0] else "/modpack_exporter.toml"
     logger.info { "Loading config at resource $configRessource" }
     val config = Config.load(configRessource)
 
@@ -36,7 +36,7 @@ fun main(args: Array<String>) {
     }
 
     logger.info { "Preparing files for export" }
-    val tempDirPath = createTempDirectory("modpack_update_assembler")
+    val tempDirPath = createTempDirectory("modpack_exporter")
     exporters.forEach { exporter ->
         exporter.setTempDirectory(tempDirPath)
         exporter.getSubTempDirectory().createDirectories()

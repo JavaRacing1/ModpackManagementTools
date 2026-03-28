@@ -1,4 +1,4 @@
-package de.javaracing.update_assembler
+package de.javaracing.modpack_exporter
 
 import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.ExperimentalHoplite
@@ -8,7 +8,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 private val logger = KotlinLogging.logger {}
 
 /**
- * Represents the configuration for the update assembler.
+ * Represents the configuration for the modpack exporter.
  *
  * @property repositoryPath The file system path to the Git repository being analyzed.
  * @property oldVersionTag The tag name representing the old version in the Git repository.
