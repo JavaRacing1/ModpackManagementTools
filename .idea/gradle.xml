@@ -9,7 +9,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/modpack_exporter" />
+            <option value="$PROJECT_DIR$/modpackExporter" />
             <option value="$PROJECT_DIR$/update_downloader" />
           </set>
         </option>

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.javaracing"
-version = project.property("modpack_exporter.version") as String
+version = project.property("modpackExporter.version") as String
 
 repositories {
     mavenCentral()
@@ -32,7 +32,7 @@ kotlin {
 }
 
 application {
-    mainClass = "de.javaracing.modpack_exporter.MainKt"
+    mainClass = "de.javaracing.modpackExporter.MainKt"
 }
 
 tasks.test {

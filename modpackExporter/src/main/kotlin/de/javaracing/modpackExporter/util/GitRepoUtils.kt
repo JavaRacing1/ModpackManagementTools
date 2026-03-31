@@ -1,6 +1,6 @@
-package de.javaracing.modpack_exporter.util
+package de.javaracing.modpackExporter.util
 
-import de.javaracing.modpack_exporter.exception.TagNotFoundException
+import de.javaracing.modpackExporter.exception.TagNotFoundException
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffEntry

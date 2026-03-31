@@ -5,7 +5,7 @@ dependencyResolutionManagement {
     }
 }
 
-include(":modpack_exporter")
+include(":modpackExporter")
 include(":update_downloader")
 
 rootProject.name = "ModpackManagementTools"

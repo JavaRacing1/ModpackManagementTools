@@ -1,4 +1,4 @@
-package de.javaracing.modpack_exporter
+package de.javaracing.modpackExporter
 
 import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.ExperimentalHoplite

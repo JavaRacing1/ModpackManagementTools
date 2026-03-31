@@ -1,4 +1,4 @@
-package de.javaracing.modpack_exporter.util
+package de.javaracing.modpackExporter.util
 
 import java.nio.file.Path
 import java.security.MessageDigest

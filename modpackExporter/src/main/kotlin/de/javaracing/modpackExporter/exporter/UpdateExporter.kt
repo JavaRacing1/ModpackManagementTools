@@ -1,11 +1,11 @@
-package de.javaracing.modpack_exporter.exporter
+package de.javaracing.modpackExporter.exporter
 
-import de.javaracing.modpack_exporter.Config
-import de.javaracing.modpack_exporter.exception.TagNotFoundException
-import de.javaracing.modpack_exporter.util.calculateHashAndSave
-import de.javaracing.modpack_exporter.util.determineDiff
-import de.javaracing.modpack_exporter.util.getChangedFilePaths
-import de.javaracing.modpack_exporter.util.getOutdatedFilePaths
+import de.javaracing.modpackExporter.Config
+import de.javaracing.modpackExporter.exception.TagNotFoundException
+import de.javaracing.modpackExporter.util.calculateHashAndSave
+import de.javaracing.modpackExporter.util.determineDiff
+import de.javaracing.modpackExporter.util.getChangedFilePaths
+import de.javaracing.modpackExporter.util.getOutdatedFilePaths
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.DiffEntry
