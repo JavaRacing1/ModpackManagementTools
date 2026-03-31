@@ -17,14 +17,15 @@ private val logger = KotlinLogging.logger {}
  * @property checkoutVersion Whether to check out the updated version of the repository.
  */
 data class Config(
-    val repositoryPath: String, val versionTag: String, val previousVersionTag: String, val outputDir: String,
+    val repositoryPath: String,
+    val versionTag: String,
+    val previousVersionTag: String,
+    val outputDir: String,
     val checkoutVersion: Boolean
 ) {
-    val versionTagRef: String
-        get() = "refs/tags/$versionTag"
+    val versionTagRef: String get() = "refs/tags/$versionTag"
 
-    val previousVersionTagRef: String
-        get() = "refs/tags/$previousVersionTag"
+    val previousVersionTagRef: String get() = "refs/tags/$previousVersionTag"
 
     companion object {
         /**

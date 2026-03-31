@@ -24,8 +24,6 @@ fun main(args: Array<String>) {
     val config = Config.load(configRessource)
 
     //TODO: Load exporters from config
-    //TODO: Add curseforge exporter
-    //TODO: Add technic launcher exporter
     val exporters: List<ModpackExporter> = listOf(UpdateExporter())
 
     //TODO: Support remote repositories
@@ -48,7 +46,7 @@ fun main(args: Array<String>) {
 
     logger.info { "Preparing files for export" }
     val tempDirPath = createTempDirectory("de/javaracing/modpackExporter")
-    exporters.forEach { exporter ->
+    for (exporter in exporters) {
         exporter.setTempDirectory(tempDirPath)
         exporter.getSubTempDirectory().createDirectories()
         exporter.prepareFiles(git, config)
@@ -66,7 +64,7 @@ fun main(args: Array<String>) {
     }
 
     logger.info { "Exporting modpack to $outputDir" }
-    exporters.forEach { exporter ->
+    for (exporter in exporters) {
         exporter.export(repositoryPath.name, config)
     }
     logger.info { "Modpack export complete" }

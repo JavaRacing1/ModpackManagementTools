@@ -31,8 +31,7 @@ class UpdateExporter : ModpackExporter {
         tempDirPath = tempDirectory
     }
 
-    override fun getSubTempDirectory(): Path =
-        tempDirPath?.resolve(getName()) ?: throw IllegalStateException("Temp directory not set")
+    override fun getTempDirectory(): Path? = tempDirPath
 
     override fun prepareFiles(git: Git, config: Config) {
         val versionTag = config.versionTag
@@ -54,17 +53,17 @@ class UpdateExporter : ModpackExporter {
         val outdatedFilePaths: Set<String> = getOutdatedFilePaths(diffEntries)
 
         logger.info { "Changed files:" }
-        changedFilePaths.forEach {
-            logger.info { "+ $it" }
+        for (filePath in changedFilePaths) {
+            logger.info { "+ $filePath" }
         }
         logger.info { "Outdated files:" }
-        outdatedFilePaths.forEach {
-            logger.info { "- $it" }
+        for (filePath in outdatedFilePaths) {
+            logger.info { "- $filePath" }
         }
 
         val tempDirPath = getSubTempDirectory()
         logger.info { "Copying changed files to temp directory $tempDirPath" }
-        changedFilePaths.forEach { filePath ->
+        for (filePath in changedFilePaths) {
             val repositoryFile = File(config.repositoryPath, filePath)
             val newFile = File(tempDirPath.toFile(), filePath)
             repositoryFile.copyTo(newFile, overwrite = true)
@@ -80,7 +79,7 @@ class UpdateExporter : ModpackExporter {
         val fileLines = mutableListOf<String>()
         fileLines.add("@echo off")
         fileLines.add("echo Deleting files...")
-        outdatedFilePaths.forEach { filePath ->
+        for (filePath in outdatedFilePaths) {
             fileLines.add("del /f /q \".\\${filePath.replace('/', '\\')}\"")
         }
         fileLines.add("echo All outdated files deleted.")
@@ -95,7 +94,7 @@ class UpdateExporter : ModpackExporter {
         val fileLines = mutableListOf<String>()
         fileLines.add("#!/bin/sh")
         fileLines.add("echo Deleting files...")
-        outdatedFilePaths.forEach { filePath ->
+        for (filePath in outdatedFilePaths) {
             fileLines.add("rm -f \"$filePath\"")
         }
         fileLines.add("echo All outdated files deleted.")
@@ -107,7 +106,8 @@ class UpdateExporter : ModpackExporter {
     private fun writeOutdatedFiles(outdatedFilePaths: Set<String>, tempDirPath: Path) {
         logger.info { "Writing file with outdated files" }
         val fileLines = mutableListOf<String>()
-        outdatedFilePaths.forEach { filePath ->
+
+        for (filePath in outdatedFilePaths) {
             fileLines.add(filePath)
         }
         val outdatedFilesFilePath = tempDirPath.resolve("outdated_files.txt")

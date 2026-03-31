@@ -26,6 +26,13 @@ interface ModpackExporter {
     fun setTempDirectory(tempDirectory: Path)
 
     /**
+     * Retrieves the temporary directory set for the exporter.
+     *
+     * @return The path to the temporary directory, or null if not set.
+     */
+    fun getTempDirectory(): Path?
+
+    /**
      * Retrieves a subdirectory within the temporary directory for use by the exporter.
      *
      * This method constructs a path based on the temporary directory that has been set
@@ -35,7 +42,8 @@ interface ModpackExporter {
      * @return The path to the subdirectory within the temporary directory.
      * @throws IllegalStateException If the temporary directory has not been set.
      */
-    fun getSubTempDirectory(): Path
+    fun getSubTempDirectory(): Path =
+        getTempDirectory()?.resolve(getName()) ?: throw IllegalStateException("Temp directory not set")
 
     /**
      * Prepares the necessary files for the modpack export process.
