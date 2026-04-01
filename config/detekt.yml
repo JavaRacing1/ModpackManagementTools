@@ -8,3 +8,5 @@ style:
         value: 'STOPSHIP:'
   MaxLineLength:
     maxLineLength: 130
+  ReturnCount:
+    max: 4
