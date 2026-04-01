@@ -19,7 +19,7 @@ private val logger = KotlinLogging.logger {}
 
 fun main(args: Array<String>) {
     //TODO: Allow config with named args
-    val configRessource: String = if (args.isNotEmpty()) args[0] else "/modpackExporter.toml"
+    val configRessource = "/modpackExporter.toml"
     logger.info { "Loading config at resource $configRessource" }
     val config = Config.load(configRessource)
 

@@ -25,6 +25,7 @@ dependencies {
 
     runtimeOnly(libs.log4j.core)
     runtimeOnly(libs.log4j.slf4j2)
+    runtimeOnly(files("src/dist/config"))
 }
 
 kotlin {
@@ -33,6 +34,20 @@ kotlin {
 
 application {
     mainClass = "de.javaracing.modpackExporter.MainKt"
+}
+
+tasks.startScripts {
+    //Replace the config path in the start scripts because Gradle assumes all classpath files are inside the lib dir (GRADLE-2991)
+    doLast {
+        val windowsScriptFile = file(windowsScript)
+        windowsScriptFile.writeText(
+            windowsScriptFile.readText().replace("%APP_HOME%\\lib\\config", "%APP_HOME%\\config")
+        )
+        val unixScriptFile = file(unixScript)
+        unixScriptFile.writeText(
+            unixScriptFile.readText().replace($$"$APP_HOME/lib/config", $$"$APP_HOME/config")
+        )
+    }
 }
 
 tasks.test {
