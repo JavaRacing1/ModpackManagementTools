@@ -14,3 +14,7 @@ similar platforms.
 Suggestions and pull requests are welcome. Please ensure that your contributions adhere to the
 [coding conventions of Kotlin](https://kotlinlang.org/docs/coding-conventions.html). KDocs should
 be added to classes, interfaces, and public functions to improve code readability and maintainability.
+
+## License
+
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
