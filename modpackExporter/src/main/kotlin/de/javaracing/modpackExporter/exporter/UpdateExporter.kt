@@ -34,8 +34,12 @@ class UpdateExporter : ModpackExporter {
     override fun getTempDirectory(): Path? = tempDirPath
 
     override fun prepareFiles(git: Git, config: Config) {
-        val versionTag = config.versionTag
-        val previousVersionTag = config.previousVersionTag
+        if (config.repository.previousVersionTag.isBlank()) {
+            throw IllegalArgumentException("Previous version tag is required for update export")
+        }
+
+        val versionTag = config.repository.versionTag
+        val previousVersionTag = config.repository.previousVersionTag
         logger.info { "Calculating diff between updated version (${versionTag}) and previous version (${previousVersionTag})" }
         var diffEntries: List<DiffEntry>
         try {
@@ -64,7 +68,7 @@ class UpdateExporter : ModpackExporter {
         val tempDirPath = getSubTempDirectory()
         logger.info { "Copying changed files to temp directory $tempDirPath" }
         for (filePath in changedFilePaths) {
-            val repositoryFile = File(config.repositoryPath, filePath)
+            val repositoryFile = File(config.repository.repositoryPath, filePath)
             val newFile = File(tempDirPath.toFile(), filePath)
             repositoryFile.copyTo(newFile, overwrite = true)
         }
@@ -115,7 +119,7 @@ class UpdateExporter : ModpackExporter {
     }
 
     override fun export(modpackName: String, config: Config) {
-        val updateZipPath = Path(config.outputDir).resolve("${modpackName}_${config.versionTag}_Update.zip")
+        val updateZipPath = Path(config.outputDir).resolve("${modpackName}_${config.repository.versionTag}_Update.zip")
         if (updateZipPath.exists()) {
             logger.info { "Deleting existing update file $updateZipPath" }
             updateZipPath.toFile().delete()

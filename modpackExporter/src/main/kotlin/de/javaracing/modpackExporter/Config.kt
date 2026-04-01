@@ -10,22 +10,16 @@ private val logger = KotlinLogging.logger {}
 /**
  * Represents the configuration for the modpack exporter.
  *
- * @property repositoryPath The file system path to the Git repository being analyzed.
- * @property versionTag The tag name representing the updated version in the Git repository.
- * @property previousVersionTag The tag name representing the previous version in the Git repository.
+ * @property repository The configuration for the Git repository being analyzed.
  * @property outputDir The directory where the update files will be placed.
- * @property checkoutVersion Whether to check out the updated version of the repository.
  */
 data class Config(
-    val repositoryPath: String,
-    val versionTag: String,
-    val previousVersionTag: String,
-    val outputDir: String,
-    val checkoutVersion: Boolean
+    val repository: RepositoryConfig,
+    val outputDir: String
 ) {
-    val versionTagRef: String get() = "refs/tags/$versionTag"
+    val versionTagRef: String get() = "refs/tags/${repository.versionTag}"
 
-    val previousVersionTagRef: String get() = "refs/tags/$previousVersionTag"
+    val previousVersionTagRef: String get() = "refs/tags/${repository.previousVersionTag}"
 
     /**
      * Validates the configuration by checking if all required values are present and not blank.
@@ -33,17 +27,16 @@ data class Config(
      * @throws IllegalArgumentException If any required value is missing or blank.
      */
     fun validateConfig() {
-        getRequiredConfigValues().forEach {
-            if (it.value.isBlank()) {
-                throw IllegalArgumentException("Required config value '${it.key}' is blank")
+        for ((key, value) in getRequiredConfigValues()) {
+            if (value.isBlank()) {
+                throw IllegalArgumentException("Required config value '$key' is blank")
             }
         }
     }
 
     private fun getRequiredConfigValues(): Map<String, String> = mapOf(
-        "repositoryPath" to repositoryPath,
-        "versionTag" to versionTag,
-        "previousVersionTag" to previousVersionTag,
+        "[repository]repositoryPath" to repository.repositoryPath,
+        "[repository]versionTag" to repository.versionTag,
         "outputDir" to outputDir
     )
 
@@ -64,3 +57,22 @@ data class Config(
             .loadConfigOrThrow<Config>()
     }
 }
+
+/**
+ * Represents the configuration for the Git repository.
+ *
+ * @property repositoryPath The file system path to the Git repository being analyzed.
+ * @property versionTag The tag name representing the updated version in the Git repository.
+ * @property previousVersionTag The tag name representing the previous version in the Git repository.
+ * @property checkoutVersion Whether to check out the updated version of the repository.
+ * @property forceCheckout Whether to force the checkout.
+ * @property stashChanges Whether to stash changes before checkout.
+ */
+data class RepositoryConfig(
+    val repositoryPath: String,
+    val versionTag: String,
+    val previousVersionTag: String,
+    val checkoutVersion: Boolean = true,
+    val forceCheckout: Boolean = false,
+    val stashChanges: Boolean = true
+)

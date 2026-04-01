@@ -32,7 +32,7 @@ fun main() {
     val exporters: List<ModpackExporter> = listOf(UpdateExporter())
 
     //TODO: Support remote repositories
-    val repositoryPath = Path(config.repositoryPath)
+    val repositoryPath = Path(config.repository.repositoryPath)
     logger.info { "Loading Git repository at $repositoryPath" }
     var repository: Repository?
     try {
@@ -43,14 +43,17 @@ fun main() {
     }
     val git = Git(repository)
 
-    //TODO: Provide more settings for checkout
-    if (config.checkoutVersion) {
-        logger.info { "Checking out updated version (${config.versionTag})" }
-        checkout(git, config.versionTagRef)
+    if (config.repository.checkoutVersion) {
+        val forceCheckout = config.repository.forceCheckout
+        val stashChanges = config.repository.stashChanges
+        logger.info {
+            "Checking out updated version (${config.repository.versionTag}; Force: $forceCheckout; Stash: $stashChanges)"
+        }
+        checkout(git, config.versionTagRef, forceCheckout, stashChanges)
     }
 
     logger.info { "Preparing files for export" }
-    val tempDirPath = createTempDirectory("de/javaracing/modpackExporter")
+    val tempDirPath = createTempDirectory("modpackExporter")
     for (exporter in exporters) {
         exporter.setTempDirectory(tempDirPath)
         exporter.getSubTempDirectory().createDirectories()

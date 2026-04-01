@@ -1,14 +1,16 @@
-# The file system path to the Git repository being analyzed. Required
-repositoryPath = ""
-
-# The tag name representing the updated version in the Git repository. Required
-versionTag = ""
-
-# The tag name representing the previous version in the Git repository. Required
-previousVersionTag = ""
-
-# The directory where the update files will be placed. Required
+# The directory where the exported files will be placed. Required
 outputDir = ""
 
+[repository]
+# The file system path to the Git repository being analyzed. Required
+repositoryPath = ""
+# The tag name representing the updated version in the Git repository. Required
+versionTag = ""
+# The tag name representing the previous version in the Git repository. Required when using the update exporter
+previousVersionTag = ""
 # Whether to check out the updated version of the repository. Default = true
 checkoutVersion = true
+# Whether to force the checkout. Default = false
+forceCheckout = false
+# Whether to stash changes before checkout. Default = true
+stashChanges = true

@@ -102,14 +102,19 @@ fun getOutdatedFilePaths(diffEntries: List<DiffEntry>): Set<String> = diffEntrie
     .toSet()
 
 /**
- * Checks out a specific reference in the given Git repository and forces the checkout operation.
+ * Checks out a specific reference in the given Git repository.
  *
  * @param git The Git instance representing the repository to perform the checkout on.
  * @param ref The name of the reference to check out (e.g., a branch or a tag).
+ * @param forceCheckout Whether to force the checkout operation.
+ * @param stashChanges Whether to stash changes before checkout.
  */
-fun checkout(git: Git, ref: String) {
+fun checkout(git: Git, ref: String, forceCheckout: Boolean = false, stashChanges: Boolean = true) {
+    if (stashChanges) {
+        git.stashCreate().call()
+    }
     git.checkout()
         .setName(ref)
-        .setForced(true)
+        .setForced(forceCheckout)
         .call()
 }
