@@ -24,7 +24,7 @@ and update your modpack.
 
 ## Usage
 
-1. Download the latest release from the releases page
+1. Download the latest release from the [releases page](https://github.com/JavaRacing1/ModpackManagementTools/releases)
 2. Extract the archive
 3. Change the configuration at `/config/modpackExporter.toml`
 4. Start the application by running the script in the `/bin` directory
