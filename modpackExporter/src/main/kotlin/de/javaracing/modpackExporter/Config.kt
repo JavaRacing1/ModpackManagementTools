@@ -27,6 +27,26 @@ data class Config(
 
     val previousVersionTagRef: String get() = "refs/tags/$previousVersionTag"
 
+    /**
+     * Validates the configuration by checking if all required values are present and not blank.
+     *
+     * @throws IllegalArgumentException If any required value is missing or blank.
+     */
+    fun validateConfig() {
+        getRequiredConfigValues().forEach {
+            if (it.value.isBlank()) {
+                throw IllegalArgumentException("Required config value '${it.key}' is blank")
+            }
+        }
+    }
+
+    private fun getRequiredConfigValues(): Map<String, String> = mapOf(
+        "repositoryPath" to repositoryPath,
+        "versionTag" to versionTag,
+        "previousVersionTag" to previousVersionTag,
+        "outputDir" to outputDir
+    )
+
     companion object {
         /**
          * Loads a configuration from the specified resource.

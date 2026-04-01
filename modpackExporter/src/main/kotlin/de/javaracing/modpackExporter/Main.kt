@@ -15,13 +15,18 @@ import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
 
+private const val CONFIG_RESOURCE = "/modpackExporter.toml"
 private val logger = KotlinLogging.logger {}
 
-fun main(args: Array<String>) {
-    //TODO: Allow config with named args
-    val configRessource = "/modpackExporter.toml"
-    logger.info { "Loading config at resource $configRessource" }
-    val config = Config.load(configRessource)
+fun main() {
+    logger.info { "Loading config at resource $CONFIG_RESOURCE" }
+    val config = Config.load(CONFIG_RESOURCE)
+    try {
+        config.validateConfig()
+    } catch (e: IllegalArgumentException) {
+        logger.error(e) { "Config validation failed: ${e.message}" }
+        return
+    }
 
     //TODO: Load exporters from config
     val exporters: List<ModpackExporter> = listOf(UpdateExporter())
