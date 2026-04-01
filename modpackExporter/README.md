@@ -17,10 +17,26 @@ and update your modpack.
 - **Modrinth** (.mrpack Import)
 - **Technic Launcher**
 
+## Prerequisites
+
+- Java 25
+- Git
+
 ## Usage
 
-TO-DO
+1. Download the latest release from the releases page
+2. Extract the archive
+3. Change the configuration at `/config/modpackExporter.toml`
+4. Start the application by running the script in the `/bin` directory
 
 ## Configuration
 
-TO-DO
+| Key                               | Type             | Default | Description                                                              |
+|-----------------------------------|------------------|---------|--------------------------------------------------------------------------|
+| `outputDir`                       | String (Path)    | `-`     | Directory where the output will be placed. Required                      |
+| `[repository] repositoryPath`     | String (Path)    | `-`     | Path to the Git repository. Required                                     |
+| `[repository] versionTag`         | String (Git Tag) | `-`     | Tag of the new modpack version. Required                                 |
+| `[repository] previousVersionTag` | String (Git Tag) | `-`     | Tag of the previous modpack version. Required for the update only export |
+| `[repository] checkoutVersion`    | Boolean          | `true`  | When true, checkout the tag of the new version before the export         |
+| `[repository] forceCheckout`      | Boolean          | `false` | When true, force the checkout of the tag                                 |
+| `[repository] stashChanges`       | Boolean          | `true`  | When true, stash changes before the checkout                             |
