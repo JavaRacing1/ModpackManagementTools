@@ -10,7 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/modpackExporter" />
-            <option value="$PROJECT_DIR$/update_downloader" />
+            <option value="$PROJECT_DIR$/updateDownloader" />
           </set>
         </option>
       </GradleProjectSettings>

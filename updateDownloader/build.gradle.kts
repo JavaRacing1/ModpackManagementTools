@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.javaracing"
-version = project.property("update_downloader.version") as String
+version = project.property("updateDownloader.version") as String
 
 repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ kotlin {
 }
 
 application {
-    mainClass = "de.javaracing.update_downloader.MainKt"
+    mainClass = "de.javaracing.updateDownloader.MainKt"
 }
 
 tasks.test {
