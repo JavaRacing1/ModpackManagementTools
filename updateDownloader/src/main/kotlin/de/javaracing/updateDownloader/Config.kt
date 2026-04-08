@@ -5,6 +5,7 @@ import com.sksamuel.hoplite.ExperimentalHoplite
 import com.sksamuel.hoplite.addFileSource
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.File
+import java.net.URI
 
 private val logger = KotlinLogging.logger {}
 
@@ -15,7 +16,7 @@ private val logger = KotlinLogging.logger {}
  * @property modpackName The name of the modpack.
  * @property hostUri The URI of the update host server.
  */
-data class Config(val version: String, val modpackName: String, val hostUri: String) {
+data class Config(val version: String, val modpackName: String, val hostUri: URI) {
     /**
      * Validates the configuration by checking if all required values are present and not blank.
      *
@@ -23,13 +24,13 @@ data class Config(val version: String, val modpackName: String, val hostUri: Str
      */
     fun validateConfig() {
         for ((key, value) in getRequiredConfigValues()) {
-            if (value.isBlank()) {
+            if (value.toString().isBlank()) {
                 throw IllegalArgumentException("Required config value '$key' is blank")
             }
         }
     }
 
-    private fun getRequiredConfigValues(): Map<String, String> = mapOf(
+    private fun getRequiredConfigValues(): Map<String, Any> = mapOf(
         "version" to version,
         "modpackName" to modpackName,
         "hostUri" to hostUri
