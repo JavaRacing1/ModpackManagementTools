@@ -1,0 +1,8 @@
+# The current version of the modpack installed. Required
+version = "1.0.0"
+
+# The name of the modpack. Required
+modpackName = ""
+
+# The URI of the update host server. Required
+hostUri = ""

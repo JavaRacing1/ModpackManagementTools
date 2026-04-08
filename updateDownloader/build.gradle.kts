@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    alias(libs.plugins.detekt)
 
     application
 }
@@ -13,6 +14,14 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation(libs.kotlin.logging)
+    implementation(libs.zt.zip)
+
+    implementation(libs.hoplite.core)
+    runtimeOnly(libs.hoplite.toml)
+
+    runtimeOnly(libs.log4j.core)
+    runtimeOnly(libs.log4j.slf4j2)
 }
 
 kotlin {
@@ -25,4 +34,9 @@ application {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+detekt {
+    config.setFrom(file("$rootDir/config/detekt.yml"))
+    buildUponDefaultConfig = true
 }
