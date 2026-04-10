@@ -7,9 +7,14 @@ import de.javaracing.updateDownloader.util.downloadVersionData
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
+import org.zeroturnaround.zip.ZipUtil
 import java.io.File
+import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createTempDirectory
+import kotlin.io.path.exists
+import kotlin.io.path.forEachLine
+import kotlin.io.path.readLines
 
 private val logger = KotlinLogging.logger {}
 
@@ -78,5 +83,31 @@ fun main() {
         return
     }
 
-    logger.info { "Updates downloaded: ${updateFileMap.size}" }
+    logger.info { "Updates downloaded: ${updateFileMap.size}. Extracting..." }
+    for (versionInfo in newerVersions) {
+        val updateFile = updateFileMap[versionInfo.version]
+            ?: throw IllegalStateException("Update file not found for version ${versionInfo.version}")
+
+        logger.info { "Extracting update ${versionInfo.version} to modpack instance" }
+        ZipUtil.unpack(updateFile, currentPath.toFile())
+        deleteOutdatedFiles(currentPath)
+    }
+}
+
+private fun deleteOutdatedFiles(currentPath: Path) {
+    val outdatedInfoFile = currentPath.resolve("outdated_files.txt")
+    outdatedInfoFile.forEachLine { outdatedFileString ->
+        val outdatedFilePath = currentPath.resolve(outdatedFileString)
+        if (outdatedFilePath.exists() && outdatedFilePath.toFile().isFile) {
+            logger.info { "Deleting outdated file: $outdatedFilePath" }
+
+            try {
+                Files.delete(outdatedFilePath)
+            } catch (e: Exception) {
+                logger.error(e) { "Failed to delete outdated file: $outdatedFilePath" }
+            }
+        } else {
+            logger.warn { "Outdated file not found: $outdatedFilePath" }
+        }
+    }
 }
