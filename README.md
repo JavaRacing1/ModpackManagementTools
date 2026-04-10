@@ -8,6 +8,8 @@ similar platforms.
 
 - **Modpack Exporter** – Package and distribute a modpack in various formats.
   See [Modpack Exporter](modpackExporter/README.md) for more information.
+- **Update Downloader** – Download and install updates for a modpack.
+  See [Update Downloader](updateDownloader/README.md) for more information.
 
 ## Contributing
 
