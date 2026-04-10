@@ -65,7 +65,8 @@ suspend fun downloadUpdate(client: OkHttpClient, versionInfo: VersionInfo, tempD
             .build()
 
         logger.info { "Downloading update $version from $downloadUrl" }
-        val outputFile = tempDir.resolve("update_$version.zip").toFile()
+        val fileExtension = downloadUrl.substringBefore('?').substringAfterLast('.', ".zip")
+        val outputFile = tempDir.resolve("update_$version.$fileExtension").toFile()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {
                 throw IOException("Failed to download update $version: ${response.code} ${response.message}")
