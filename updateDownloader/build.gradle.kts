@@ -19,6 +19,7 @@ dependencies {
     implementation(libs.zt.zip)
     implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.datetime)
 
     implementation(libs.hoplite.core)
     runtimeOnly(libs.hoplite.toml)

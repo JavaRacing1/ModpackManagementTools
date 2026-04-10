@@ -1,6 +1,7 @@
 package de.javaracing.updateDownloader
 
 import de.javaracing.updateDownloader.data.AvailableVersions
+import de.javaracing.updateDownloader.data.VersionInfo
 import de.javaracing.updateDownloader.util.downloadVersionData
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
@@ -44,6 +45,21 @@ fun main() {
     if (availableVersions == null) {
         return
     }
+
+    var newerVersions: List<VersionInfo>
+    try {
+        newerVersions = availableVersions.getNewerVersions(config.version)
+    } catch (e: IllegalArgumentException) {
+        logger.error(e) { "Failed to determine newer versions: ${e.message}" }
+        return
+    }
+
+    if (newerVersions.isEmpty()) {
+        logger.info { "No newer versions found. Modpack is up to date." }
+        return
+    }
+
+    logger.info { "${newerVersions.size} updates found: ${newerVersions.joinToString { it.version }}" }
 
     val tempDirPath = createTempDirectory("updateDownloader")
 }

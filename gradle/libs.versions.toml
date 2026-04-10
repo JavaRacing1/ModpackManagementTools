@@ -4,6 +4,7 @@ hoplite = "2.9.0"
 jgit = "7.6.0.202603022253-r"
 kotlin = "2.3.10"
 kotlinLogging = "7.0.3"
+kotlinx-datetime = "0.7.1"
 kotlinx-serialization = "1.10.0"
 log4j = "2.25.3"
 okhttp = "5.3.2"
@@ -15,6 +16,7 @@ hoplite-core = { group = "com.sksamuel.hoplite", name = "hoplite-core", version.
 hoplite-toml = { group = "com.sksamuel.hoplite", name = "hoplite-toml", version.ref = "hoplite" }
 jgit = { group = "org.eclipse.jgit", name = "org.eclipse.jgit", version.ref = "jgit" }
 kotlin-logging = { group = "io.github.oshai", name = "kotlin-logging-jvm", version.ref = "kotlinLogging" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 log4j-core = { group = "org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j" }
 log4j-slf4j2 = { group = "org.apache.logging.log4j", name = "log4j-slf4j2-impl", version.ref = "log4j" }
