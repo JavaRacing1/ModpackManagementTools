@@ -1,7 +1,12 @@
 package de.javaracing.updateDownloader
 
+import de.javaracing.updateDownloader.data.AvailableVersions
+import de.javaracing.updateDownloader.util.downloadVersionData
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
 import java.nio.file.Path
+import kotlin.io.path.createTempDirectory
 
 private val logger = KotlinLogging.logger {}
 
@@ -14,6 +19,7 @@ fun main() {
         logger.warn { "Configure the update downloader and restart the application." }
         return
     }
+    logger.info { "Loading config from $configPath" }
     val config = Config.load(configPath.toFile())
     try {
         config.validateConfig()
@@ -21,4 +27,23 @@ fun main() {
         logger.error(e) { "Config validation failed: ${e.message}" }
         return
     }
+
+    logger.info { "Current version: ${config.version}" }
+
+    val client = OkHttpClient()
+    val modpackHostUrl = config.hostUrl.toURI().resolve(config.modpackName).toURL()
+
+    var availableVersions: AvailableVersions? = null
+    runBlocking {
+        try {
+            availableVersions = downloadVersionData(client, modpackHostUrl)
+        } catch (e: Exception) {
+            logger.error(e) { "Failed to fetch available versions: ${e.message}" }
+        }
+    }
+    if (availableVersions == null) {
+        return
+    }
+
+    val tempDirPath = createTempDirectory("updateDownloader")
 }

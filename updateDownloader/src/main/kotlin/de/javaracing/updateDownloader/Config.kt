@@ -5,7 +5,7 @@ import com.sksamuel.hoplite.ExperimentalHoplite
 import com.sksamuel.hoplite.addFileSource
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.File
-import java.net.URI
+import java.net.URL
 
 private val logger = KotlinLogging.logger {}
 
@@ -14,9 +14,9 @@ private val logger = KotlinLogging.logger {}
  *
  * @property version The current version of the modpack installed.
  * @property modpackName The name of the modpack.
- * @property hostUri The URI of the update host server.
+ * @property hostUrl The URL of the update host server.
  */
-data class Config(val version: String, val modpackName: String, val hostUri: URI) {
+data class Config(val version: String, val modpackName: String, val hostUrl: URL) {
     /**
      * Validates the configuration by checking if all required values are present and not blank.
      *
@@ -33,7 +33,7 @@ data class Config(val version: String, val modpackName: String, val hostUri: URI
     private fun getRequiredConfigValues(): Map<String, Any> = mapOf(
         "version" to version,
         "modpackName" to modpackName,
-        "hostUri" to hostUri
+        "hostUrl" to hostUrl
     )
 
     companion object {

@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization")
     alias(libs.plugins.detekt)
 
     application
@@ -16,6 +17,8 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation(libs.kotlin.logging)
     implementation(libs.zt.zip)
+    implementation(libs.okhttp)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.hoplite.core)
     runtimeOnly(libs.hoplite.toml)

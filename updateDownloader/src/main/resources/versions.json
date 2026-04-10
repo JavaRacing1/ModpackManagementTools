@@ -1,0 +1,9 @@
+{
+  "versions": [
+    {
+      "version": "1.0.0",
+      "downloadUrl": "https://example.com/ModpackName/ModpackName_1.0.0_Update.zip",
+      "releasedAt": "2026-01-01T12:00:00Z"
+    }
+  ]
+}
