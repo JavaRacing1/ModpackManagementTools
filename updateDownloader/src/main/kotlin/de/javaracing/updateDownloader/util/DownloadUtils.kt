@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
+import java.io.IOException
 import java.net.URL
 import java.nio.file.Path
 
@@ -37,7 +38,7 @@ suspend fun downloadVersionData(client: OkHttpClient, modpackHostUrl: URL): Avai
         logger.info { "Downloading version file from $versionsFileUrl" }
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {
-                throw Exception("Failed to download version file: ${response.code} ${response.message}")
+                throw IOException("Failed to download version file: ${response.code} ${response.message}")
             }
 
             response.body.use { responseBody ->
@@ -67,7 +68,7 @@ suspend fun downloadUpdate(client: OkHttpClient, versionInfo: VersionInfo, tempD
         val outputFile = tempDir.resolve("update_$version.zip").toFile()
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {
-                throw Exception("Failed to download update $version: ${response.code} ${response.message}")
+                throw IOException("Failed to download update $version: ${response.code} ${response.message}")
             }
 
             response.body.use { responseBody ->

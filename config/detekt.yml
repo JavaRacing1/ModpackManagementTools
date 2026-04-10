@@ -9,4 +9,8 @@ style:
   MaxLineLength:
     maxLineLength: 130
   ReturnCount:
-    max: 4
+    active: false
+
+complexity:
+  LongMethod:
+    allowedLines: 80

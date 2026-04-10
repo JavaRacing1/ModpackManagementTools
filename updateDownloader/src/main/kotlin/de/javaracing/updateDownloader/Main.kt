@@ -9,12 +9,12 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.zeroturnaround.zip.ZipUtil
 import java.io.File
+import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createTempDirectory
 import kotlin.io.path.exists
 import kotlin.io.path.forEachLine
-import kotlin.io.path.readLines
 
 private val logger = KotlinLogging.logger {}
 
@@ -44,7 +44,7 @@ fun main() {
     val availableVersions: AvailableVersions? = runBlocking {
         try {
             downloadVersionData(client, modpackHostUrl)
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             logger.error(e) { "Failed to fetch available versions: ${e.message}" }
             null
         }
@@ -72,7 +72,7 @@ fun main() {
     val updateFileMap: Map<String, File> = runBlocking {
         try {
             downloadAllUpdates(client, newerVersions, tempDirPath, config.maxParallelDownloads)
-        } catch (e: Exception) {
+        } catch (e: IOException) {
             logger.error(e) { "Failed to download updates: ${e.message}" }
             emptyMap()
         }
@@ -103,7 +103,7 @@ private fun deleteOutdatedFiles(currentPath: Path) {
 
             try {
                 Files.delete(outdatedFilePath)
-            } catch (e: Exception) {
+            } catch (e: IOException) {
                 logger.error(e) { "Failed to delete outdated file: $outdatedFilePath" }
             }
         } else {
