@@ -15,8 +15,9 @@ private val logger = KotlinLogging.logger {}
  * @property version The current version of the modpack installed.
  * @property modpackName The name of the modpack.
  * @property hostUrl The URL of the update host server.
+ * @property maxParallelDownloads The maximum number of concurrent downloads allowed.
  */
-data class Config(val version: String, val modpackName: String, val hostUrl: URL) {
+data class Config(val version: String, val modpackName: String, val hostUrl: URL, val maxParallelDownloads: Int = 5) {
     /**
      * Validates the configuration by checking if all required values are present and not blank.
      *
@@ -59,7 +60,7 @@ data class Config(val version: String, val modpackName: String, val hostUrl: URL
          * @throws IllegalStateException If the default configuration resource cannot be found.
          */
         fun copyDefaultConfig(targetFile: File) {
-            Config::class.java.getResourceAsStream("/config.toml").use { input ->
+            Config::class.java.getResourceAsStream("/updateDownloader.toml").use { input ->
                 {
                     if (input == null) {
                         logger.error { "Failed to load default config: resource not found" }

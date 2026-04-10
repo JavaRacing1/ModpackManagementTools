@@ -6,3 +6,6 @@ modpackName = ""
 
 # The URL of the update host server. Required
 hostUrl = ""
+
+# The maximum number of concurrent downloads allowed.
+maxParallelDownloads = 5

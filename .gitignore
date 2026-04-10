@@ -8,7 +8,7 @@ build/
 *.sh
 *.sha256
 /config/detekt/template.yml
-/config/config.toml
+/config/updateDownloader.toml
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
