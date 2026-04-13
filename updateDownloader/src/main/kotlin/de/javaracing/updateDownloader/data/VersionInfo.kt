@@ -4,7 +4,15 @@ import kotlinx.serialization.Serializable
 import kotlin.time.Instant
 
 @Serializable
-data class VersionInfo(val version: String, val downloadUrl: String, val releasedAt: Instant)
+data class VersionInfo(
+    val version: String,
+    val downloadUrl: String,
+    val releasedAt: Instant,
+    val sha256: String = "",
+    val sha256Url: String = ""
+) {
+    val isVerificationEnabled: Boolean get() = sha256.isNotBlank() || sha256Url.isNotBlank()
+}
 
 @Serializable
 data class AvailableVersions(private val versions: List<VersionInfo>) {

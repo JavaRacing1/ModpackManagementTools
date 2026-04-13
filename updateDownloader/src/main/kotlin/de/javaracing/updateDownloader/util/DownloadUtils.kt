@@ -80,6 +80,16 @@ suspend fun downloadUpdate(client: OkHttpClient, versionInfo: VersionInfo, tempD
                 }
             }
         }
+
+        if (versionInfo.isVerificationEnabled) {
+            val sha256 = getSha256ForVersion(client, versionInfo)
+            logger.info { "SHA256 for update $version: $sha256" }
+            val calculatedSha256 = calculateHash(outputFile)
+            if (calculatedSha256 != sha256) {
+                throw IOException("SHA256 mismatch for update $version: expected $sha256, got $calculatedSha256")
+            }
+        }
+
         outputFile
     }
 
@@ -108,4 +118,25 @@ suspend fun downloadAllUpdates(
             }
         }
     }.awaitAll().toMap()
+}
+
+private suspend fun getSha256ForVersion(client: OkHttpClient, versionInfo: VersionInfo): String {
+    if (versionInfo.sha256.isNotBlank()) {
+        return versionInfo.sha256
+    }
+
+    return withContext(Dispatchers.IO) {
+        val request = Request.Builder()
+            .url(versionInfo.sha256Url)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) {
+                throw IOException("Failed to download SHA256 for update ${versionInfo.version}: ${response.code} ${response.message}")
+            }
+
+            response.body.use { responseBody ->
+                responseBody.string()
+            }
+        }
+    }
 }

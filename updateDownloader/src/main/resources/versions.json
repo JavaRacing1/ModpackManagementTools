@@ -3,7 +3,9 @@
     {
       "version": "1.0.0",
       "downloadUrl": "https://example.com/ModpackName/ModpackName_1.0.0_Update.zip",
-      "releasedAt": "2026-01-01T12:00:00Z"
+      "releasedAt": "2026-01-01T12:00:00Z",
+      "sha256": "e8551e5a3511b30948c225589c7668367bc690ff2beefa251f5fe6cf65cbf524",
+      "sha256Url": "https://example.com/ModpackName/ModpackName_1.0.0_Update.zip.sha256"
     }
   ]
 }
