@@ -20,7 +20,7 @@ and hosted on a webserver.
    (and add it to your Git repository)
 2. Change the configuration in the updateDownloader.toml. See [Configuration](#configuration)
 3. Download the [versions.json](/src/main/resources/versions.json) and host it on a webserver.
-   The URL of the file needs to be "https://{hostUrl}/{modpackName}/versions.json"
+   The URL of the file needs to be set in the configuration.
 4. When releasing a new version of your modpack:
     1. Set the new version number in your [updateDownloader.toml](/src/main/resources/updateDownloader.toml)
        configuration
@@ -44,5 +44,5 @@ from the URL specified. If neither property is present, the SHA256 hash of the u
 |------------------------|--------------|---------|--------------------------------------------------------|
 | `version`              | String       | `-`     | The current version of the modpack installed. Required |
 | `modpackName`          | String       | `-`     | The name of the modpack. Required                      |
-| `hostUrl`              | String (URL) | `-`     | The URL of the update host server. Required            |
+| `versionDataUrl`       | String (URL) | `-`     | The URL of the version data file. Required             |
 | `maxParallelDownloads` | Integer      | `5`     | The maximum number of concurrent downloads allowed.    |

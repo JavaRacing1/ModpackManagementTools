@@ -4,8 +4,8 @@ version = "1.0.0"
 # The name of the modpack. Required
 modpackName = ""
 
-# The URL of the update host server. Required
-hostUrl = ""
+# The URL of the version data file. Required
+versionDataUrl = ""
 
 # The maximum number of concurrent downloads allowed.
 maxParallelDownloads = 5

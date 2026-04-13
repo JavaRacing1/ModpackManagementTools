@@ -14,10 +14,10 @@ private val logger = KotlinLogging.logger {}
  *
  * @property version The current version of the modpack installed.
  * @property modpackName The name of the modpack.
- * @property hostUrl The URL of the update host server.
+ * @property versionDataUrl The URL of the version data file.
  * @property maxParallelDownloads The maximum number of concurrent downloads allowed.
  */
-data class Config(val version: String, val modpackName: String, val hostUrl: URL, val maxParallelDownloads: Int = 5) {
+data class Config(val version: String, val modpackName: String, val versionDataUrl: URL, val maxParallelDownloads: Int = 5) {
     /**
      * Validates the configuration by checking if all required values are present and not blank.
      *
@@ -34,7 +34,7 @@ data class Config(val version: String, val modpackName: String, val hostUrl: URL
     private fun getRequiredConfigValues(): Map<String, Any> = mapOf(
         "version" to version,
         "modpackName" to modpackName,
-        "hostUrl" to hostUrl
+        "versionDataUrl" to versionDataUrl
     )
 
     companion object {

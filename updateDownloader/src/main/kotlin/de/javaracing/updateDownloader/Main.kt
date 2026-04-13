@@ -39,11 +39,10 @@ fun main() {
     logger.info { "Current version: ${config.version}" }
 
     val client = OkHttpClient()
-    val modpackHostUrl = config.hostUrl.toURI().resolve(config.modpackName).toURL()
 
     val availableVersions: AvailableVersions? = runBlocking {
         try {
-            downloadVersionData(client, modpackHostUrl)
+            downloadVersionData(client, config.versionDataUrl)
         } catch (e: IOException) {
             logger.error(e) { "Failed to fetch available versions: ${e.message}" }
             null

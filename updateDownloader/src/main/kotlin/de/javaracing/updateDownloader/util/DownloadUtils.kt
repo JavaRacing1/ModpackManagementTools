@@ -24,18 +24,17 @@ private val logger = KotlinLogging.logger {}
  * Downloads the available version data from the specified modpack host URL.
  *
  * @param client The HTTP client used to execute the request.
- * @param modpackHostUrl The base URL of the modpack host.
+ * @param versionDataUrl The URL of the version data file.
  * @return A data object containing the available versions information.
  * @throws Exception If the download request fails or the response cannot be parsed.
  */
-suspend fun downloadVersionData(client: OkHttpClient, modpackHostUrl: URL): AvailableVersions =
+suspend fun downloadVersionData(client: OkHttpClient, versionDataUrl: URL): AvailableVersions =
     withContext(Dispatchers.IO) {
-        val versionsFileUrl = "$modpackHostUrl/versions.json"
         val request = Request.Builder()
-            .url(versionsFileUrl)
+            .url(versionDataUrl)
             .build()
 
-        logger.info { "Downloading version file from $versionsFileUrl" }
+        logger.info { "Downloading version file from $versionDataUrl" }
         client.newCall(request).execute().use { response ->
             if (!response.isSuccessful) {
                 throw IOException("Failed to download version file: ${response.code} ${response.message}")
